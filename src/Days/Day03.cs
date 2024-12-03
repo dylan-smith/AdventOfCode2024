@@ -18,9 +18,9 @@ public class Day03 : BaseDay
 
                 if (comma > 0 && endParen > 0)
                 {
-                    if (int.TryParse(input.Substring(i + 4, comma - (i + 4)), out var arg1))
+                    if (int.TryParse(input.AsSpan(i + 4, comma - (i + 4)), out var arg1))
                     {
-                        if (int.TryParse(input.Substring(comma + 1, endParen - comma - 1), out var arg2))
+                        if (int.TryParse(input.AsSpan(comma + 1, endParen - comma - 1), out var arg2))
                         {
                             result += arg1 * arg2;
                         }
@@ -58,9 +58,9 @@ public class Day03 : BaseDay
 
                     if (comma > 0 && endParen > 0)
                     {
-                        if (int.TryParse(input.Substring(i + 4, comma - (i + 4)), out var arg1))
+                        if (int.TryParse(input[(i + 4)..comma], out var arg1))
                         {
-                            if (int.TryParse(input.Substring(comma + 1, endParen - comma - 1), out var arg2))
+                            if (int.TryParse(input[(comma + 1)..endParen], out var arg2))
                             {
                                 result += arg1 * arg2;
                             }

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace AdventOfCode.Days;
 
-[Day(2023, 11)]
+[Day(2024, 11)]
 public class Day11 : BaseDay
 {
     public override string PartOne(string input)

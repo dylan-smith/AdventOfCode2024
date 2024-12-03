@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace AdventOfCode.Days;
 
-[Day(2023, 10)]
+[Day(2024, 10)]
 public class Day10 : BaseDay
 {
     public override string PartOne(string input)

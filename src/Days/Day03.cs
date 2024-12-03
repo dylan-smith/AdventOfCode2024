@@ -23,6 +23,8 @@ public class Day03 : BaseDay
             if (withDonts && memory.Substring(i, 4) == "do()")
             {
                 enabled = true;
+                i += 3;
+                continue;
             }
 
             if (enabled)
@@ -30,6 +32,8 @@ public class Day03 : BaseDay
                 if (withDonts && memory.Substring(i, 7) == "don't()")
                 {
                     enabled = false;
+                    i += 6;
+                    continue;
                 }
 
                 if (memory.Substring(i, 4) == "mul(")
@@ -44,6 +48,8 @@ public class Day03 : BaseDay
                             if (int.TryParse(memory[(comma + 1)..endParen], out var arg2))
                             {
                                 result += arg1 * arg2;
+                                i += endParen - i;
+                                continue;
                             }
                         }
                     }

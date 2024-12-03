@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 3)]
 public class Day03 : BaseDay

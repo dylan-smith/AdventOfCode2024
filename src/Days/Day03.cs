@@ -11,7 +11,6 @@ public class Day03 : BaseDay
 
         for (var i = 0; i < input.Length - 8; i++)
         {
-            var foo = input.Substring(i, 4);
             if (input.Substring(i, 4) == "mul(")
             {
                 var comma = input.IndexOf(',', i + 4);
@@ -19,12 +18,8 @@ public class Day03 : BaseDay
 
                 if (comma > 0 && endParen > 0)
                 {
-                    var foo2 = input.Substring(i + 4, comma - (i + 4));
-
                     if (int.TryParse(input.Substring(i + 4, comma - (i + 4)), out var arg1))
                     {
-                        var foo3 = input.Substring(comma + 1, endParen - comma - 1);
-
                         if (int.TryParse(input.Substring(comma + 1, endParen - comma - 1), out var arg2))
                         {
                             result += arg1 * arg2;
@@ -49,14 +44,13 @@ public class Day03 : BaseDay
                 enabled = true;
             }
 
-            if (input.Substring(i, 7) == "don't()")
-            {
-                enabled = false;
-            }
-
             if (enabled)
             {
-                var foo = input.Substring(i, 4);
+                if (input.Substring(i, 7) == "don't()")
+                {
+                    enabled = false;
+                }
+
                 if (input.Substring(i, 4) == "mul(")
                 {
                     var comma = input.IndexOf(',', i + 4);
@@ -64,12 +58,8 @@ public class Day03 : BaseDay
 
                     if (comma > 0 && endParen > 0)
                     {
-                        var foo2 = input.Substring(i + 4, comma - (i + 4));
-
                         if (int.TryParse(input.Substring(i + 4, comma - (i + 4)), out var arg1))
                         {
-                            var foo3 = input.Substring(comma + 1, endParen - comma - 1);
-
                             if (int.TryParse(input.Substring(comma + 1, endParen - comma - 1), out var arg2))
                             {
                                 result += arg1 * arg2;

@@ -146,10 +146,9 @@ public static class CharGridExtensions
 
     public static long CountMatchingBlocks(this char[,] grid, char[,] match)
     {
-        var blocks = grid.GetBlocks(match.Width(), match.Height());
         var result = 0L;
 
-        foreach (var block in blocks)
+        foreach (var block in grid.GetBlocks(match.Width(), match.Height()))
         {
             if (block.MatchWithWildcards(match))
             {

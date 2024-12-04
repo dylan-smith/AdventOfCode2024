@@ -25,22 +25,15 @@ public class Day01 : BaseDay
     public override string PartTwo(string input)
     {
         var left = new List<int>();
-        var right = new List<int>();
+        var right = new Dictionary<int, int>();
 
         foreach (var line in input.Lines())
         {
             left.Add(line.Integers().First());
-            right.Add(line.Integers().Last());
+            right.SafeIncrement(line.Integers().Last());
         }
 
-        var similarity = 0L;
-
-        foreach (var item in left)
-        {
-            var count = right.Count(x => x == item);
-
-            similarity += item * count;
-        }
+        var similarity = left.Sum(x => x * right.SafeGet(x));
 
         return similarity.ToString();
     }

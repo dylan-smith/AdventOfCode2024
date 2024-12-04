@@ -143,6 +143,56 @@ public static class CharGridExtensions
         }
     }
 
+    public static long CountMatchingBlocks(this char[,] grid, char[,] match)
+    {
+        var blocks = grid.GetBlocks(match.GetLength(0), match.GetLength(1));
+        var result = 0L;
+
+        foreach (var block in blocks)
+        {
+            var matches = true;
+
+            for (var x = 0; x < block.GetLength(0) && matches; x++)
+            {
+                for (var y = 0; y < block.GetLength(1) && matches; y++)
+                {
+                    if (match[x, y] != '*' && match[x, y] != block[x, y])
+                    {
+                        matches = false;
+                    }
+                }
+            }
+
+            if (matches)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    public static IEnumerable<char[,]> GetBlocks(this char[,] grid, int width, int height)
+    {
+        for (var x = 0; x < grid.Width() - (width - 1); x++)
+        {
+            for (var y = 0; y < grid.Height() - (height - 1); y++)
+            {
+                var result = new char[width, height];
+
+                for (var i = 0; i < width; i++)
+                {
+                    for (var j = 0; j < height; j++)
+                    {
+                        result[i, j] = grid[x + i, y + j];
+                    }
+                }
+
+                yield return result;
+            }
+        }
+    }
+
     public static IEnumerable<Point> GetPoints<T>(this T[,] grid)
     {
         for (var y = 0; y < grid.GetLength(1); y++)

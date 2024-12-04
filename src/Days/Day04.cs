@@ -25,37 +25,40 @@ public class Day04 : BaseDay
     public override string PartTwo(string input)
     {
         var board = input.CreateCharGrid();
-        var result = 0;
 
-        for (var x = 0; x < board.Width() - 2; x++)
+        char[,] match1 =
         {
-            for (var y = 0; y < board.Height() - 2; y++)
-            {
-                if (board[x + 1, y + 1] == 'A')
-                {
-                    if (board[x, y] == 'M' && board[x + 2, y] == 'S' && board[x, y + 2] == 'M' && board[x + 2, y + 2] == 'S')
-                    {
-                        result++;
-                    }
+            { 'M', '*', 'S' },
+            { '*', 'A', '*' },
+            { 'M', '*', 'S' }
+        };
 
-                    if (board[x, y] == 'S' && board[x + 2, y] == 'S' && board[x, y + 2] == 'M' && board[x + 2, y + 2] == 'M')
-                    {
-                        result++;
-                    }
+        char[,] match2 =
+        {
+            { 'S', '*', 'S' },
+            { '*', 'A', '*' },
+            { 'M', '*', 'M' }
+        };
 
-                    if (board[x, y] == 'M' && board[x + 2, y] == 'M' && board[x, y + 2] == 'S' && board[x + 2, y + 2] == 'S')
-                    {
-                        result++;
-                    }
+        char[,] match3 =
+        {
+            { 'M', '*', 'M' },
+            { '*', 'A', '*' },
+            { 'S', '*', 'S' }
+        };
 
-                    if (board[x, y] == 'S' && board[x + 2, y] == 'M' && board[x, y + 2] == 'S' && board[x + 2, y + 2] == 'M')
-                    {
-                        result++;
-                    }
-                }
-            }
-        }
+        char[,] match4 =
+        {
+            { 'S', '*', 'M' },
+            { '*', 'A', '*' },
+            { 'S', '*', 'M' }
+        };
 
-        return result.ToString();
+        var matches = board.CountMatchingBlocks(match1);
+        matches += board.CountMatchingBlocks(match2);
+        matches += board.CountMatchingBlocks(match3);
+        matches += board.CountMatchingBlocks(match4);
+
+        return matches.ToString();
     }
 }

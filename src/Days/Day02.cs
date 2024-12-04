@@ -1,6 +1,4 @@
-﻿
-
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 2)]
 public class Day02 : BaseDay
@@ -16,31 +14,18 @@ public class Day02 : BaseDay
 
     private bool IsSafe(List<int> report)
     {
-        var increases = 0;
-        var decreases = 0;
-
-        for (int i = 1; i < report.Count(); i++)
+        if (report.HasConsecutive())
         {
-            if (report[i] > report[i - 1])
-            {
-                increases++;
-            }
+            return false;
+        }
 
-            if (report[i] < report[i - 1])
-            {
-                decreases++;
-            }
+        if (!report.IsIncreasing() && !report.IsDecreasing())
+        {
+            return false;
+        }
 
-            if (increases > 0 && decreases > 0)
-            {
-                return false;
-            }
-
-            if (report[i] == report[i - 1])
-            {
-                return false;
-            }
-
+        for (int i = 1; i < report.Count; i++)
+        {
             if (Math.Abs(report[i] - report[i - 1]) > 3)
             {
                 return false;

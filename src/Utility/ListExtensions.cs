@@ -78,4 +78,43 @@ public static class ListExtensions
 
         return result;
     }
+
+    public static bool IsIncreasing(this List<int> list)
+    {
+        for (var i = 1; i < list.Count; i++)
+        {
+            if (list[i] < list[i - 1])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static bool IsDecreasing(this List<int> list)
+    {
+        for (var i = 1; i < list.Count; i++)
+        {
+            if (list[i] > list[i - 1])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static bool HasConsecutive(this List<int> list)
+    {
+        for (var i = 1; i < list.Count; i++)
+        {
+            if (list[i] == list[i - 1])
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

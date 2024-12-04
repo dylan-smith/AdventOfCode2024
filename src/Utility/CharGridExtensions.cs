@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Documents;
 
 namespace AdventOfCode;
 
@@ -52,6 +54,93 @@ public static class CharGridExtensions
         }
 
         return sb.ToString();
+    }
+
+    public static IEnumerable<string> GetHorizontalGroups(this char[,] grid, int length)
+    {
+        for (var y = 0; y < grid.Height(); y++)
+        {
+            for (var x = 0; x < grid.Width() - (length - 1); x++)
+            {
+                var result = new StringBuilder();
+
+                for (var i = 0; i < length; i++)
+                {
+                    result.Append(grid[x + i, y]);
+                }
+
+                yield return result.ToString();
+            }
+        }
+    }
+
+    public static IEnumerable<string> GetVerticalGroups(this char[,] grid, int length)
+    {
+        for (var x = 0; x < grid.Width(); x++)
+        {
+            for (var y = 0; y < grid.Height() - (length - 1); y++)
+            {
+                var result = new StringBuilder();
+
+                for (var i = 0; i < length; i++)
+                {
+                    result.Append(grid[x, y + i]);
+                }
+
+                yield return result.ToString();
+            }
+        }
+    }
+
+    public static IEnumerable<string> GetDiagonalGroups(this char[,] grid, int length)
+    {
+        for (var x = 0; x < grid.Width() - (length - 1); x++)
+        {
+            for (var y = 0; y < grid.Height() - (length - 1); y++)
+            {
+                var result = new StringBuilder();
+
+                for (var i = 0; i < length; i++)
+                {
+                    result.Append(grid[x + i, y + i]);
+                }
+
+                yield return result.ToString();
+            }
+        }
+
+        for (var x = grid.Width() - 1; x > (length - 2); x--)
+        {
+            for (var y = 0; y < grid.Height() - (length - 1); y++)
+            {
+                var result = new StringBuilder();
+
+                for (var i = 0; i < length; i++)
+                {
+                    result.Append(grid[x - i, y + i]);
+                }
+
+                yield return result.ToString();
+            }
+        }
+    }
+
+    public static IEnumerable<string> GetAllGroups(this char[,] grid, int length)
+    {
+        foreach (var group in grid.GetHorizontalGroups(length))
+        {
+            yield return group;
+        }
+
+        foreach (var group in grid.GetVerticalGroups(length))
+        {
+            yield return group;
+        }
+
+        foreach (var group in grid.GetDiagonalGroups(length))
+        {
+            yield return group;
+        }
     }
 
     public static IEnumerable<Point> GetPoints<T>(this T[,] grid)

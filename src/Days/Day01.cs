@@ -17,12 +17,7 @@ public class Day01 : BaseDay
         left.Sort();
         right.Sort();
 
-        var totalDistance = 0;
-
-        for (int i = 0; i < left.Count; i++)
-        {
-            totalDistance += Math.Abs(left[i] - right[i]);
-        }
+        var totalDistance = left.Zip(right).Sum(x => Math.Abs(x.First - x.Second));
 
         return totalDistance.ToString();
     }

@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Documents;
 
 namespace AdventOfCode;
@@ -145,31 +146,34 @@ public static class CharGridExtensions
 
     public static long CountMatchingBlocks(this char[,] grid, char[,] match)
     {
-        var blocks = grid.GetBlocks(match.GetLength(0), match.GetLength(1));
+        var blocks = grid.GetBlocks(match.Width(), match.Height());
         var result = 0L;
 
         foreach (var block in blocks)
         {
-            var matches = true;
-
-            for (var x = 0; x < block.GetLength(0) && matches; x++)
-            {
-                for (var y = 0; y < block.GetLength(1) && matches; y++)
-                {
-                    if (match[x, y] != '*' && match[x, y] != block[x, y])
-                    {
-                        matches = false;
-                    }
-                }
-            }
-
-            if (matches)
+            if (block.MatchWithWildcards(match))
             {
                 result++;
             }
         }
 
         return result;
+    }
+
+    public static bool MatchWithWildcards(this char[,] grid, char[,] match)
+    {
+        for (var x = 0; x < grid.GetLength(0); x++)
+        {
+            for (var y = 0; y < grid.GetLength(1); y++)
+            {
+                if (match[x, y] != '*' && match[x, y] != grid[x, y])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static IEnumerable<char[,]> GetBlocks(this char[,] grid, int width, int height)

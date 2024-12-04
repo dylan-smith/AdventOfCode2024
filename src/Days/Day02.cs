@@ -46,7 +46,8 @@ public class Day02 : BaseDay
             if (IsSafe(report))
             {
                 safeCount++;
-            } else
+            }
+            else
             {
                 for (var i = 0; i < report.Count; i++)
                 {

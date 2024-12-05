@@ -1,8 +1,4 @@
-﻿
-
-using System.Diagnostics.Metrics;
-
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 5)]
 public class Day05 : BaseDay

@@ -41,12 +41,12 @@ namespace AdventOfCode
 
         public static Point MoveDown(this Point point, int distance)
         {
-            return new Point(point.X, point.Y - distance);
+            return new Point(point.X, point.Y + distance);
         }
 
         public static Point MoveUp(this Point point, int distance)
         {
-            return new Point(point.X, point.Y + distance);
+            return new Point(point.X, point.Y - distance);
         }
 
         public static Point MoveRight(this Point point, int distance)

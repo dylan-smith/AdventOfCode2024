@@ -11,6 +11,11 @@ public class Day06 : BaseDay
     {
         var map = input.CreateCharGrid();
 
+        return FindGuardRoute(map).Count.ToString();
+    }
+
+    private HashSet<Point> FindGuardRoute(char[,] map)
+    {
         var seen = new HashSet<Point>();
         var pos = map.GetPoints('^').First();
         var direction = Direction.Up;
@@ -19,7 +24,7 @@ public class Day06 : BaseDay
         {
             seen.Add(pos);
             var newPos = pos.Move(direction);
-            
+
             while (map.IsValidPoint(newPos) && map[newPos.X, newPos.Y] == '#')
             {
                 direction = direction.TurnRight();
@@ -29,7 +34,7 @@ public class Day06 : BaseDay
             pos = newPos;
         }
 
-        return seen.Count.ToString();
+        return seen;
     }
 
     public override string PartTwo(string input)
@@ -38,23 +43,22 @@ public class Day06 : BaseDay
         var startPos = map.GetPoints('^').First();
         var result = new List<Point>();
 
-        for (var x = 0; x < map.Width(); x++)
+        var route = FindGuardRoute(map);
+
+        foreach (var point in route)
         {
-            for (var y = 0; y < map.Height(); y++)
+            if (point.X != startPos.X || point.Y != startPos.Y)
             {
-                if (x != startPos.X || y != startPos.Y)
+                if (map[point.X, point.Y] != '#')
                 {
-                    if (map[x, y] != '#')
+                    map[point.X, point.Y] = '#';
+
+                    if (EndsInLoop(map, startPos, Direction.Up))
                     {
-                        map[x, y] = '#';
-
-                        if (EndsInLoop(map, startPos, Direction.Up))
-                        {
-                            result.Add(new Point(x, y));
-                        }
-
-                        map[x, y] = '.';
+                        result.Add(new Point(point.X, point.Y));
                     }
+
+                    map[point.X, point.Y] = '.';
                 }
             }
         }

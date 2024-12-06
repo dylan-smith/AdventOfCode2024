@@ -34,6 +34,57 @@ public class Day06 : BaseDay
 
     public override string PartTwo(string input)
     {
-        return string.Empty;
+        var map = input.CreateCharGrid();
+        var startPos = map.GetPoints('^').First();
+        var result = new List<Point>();
+
+        for (var x = 0; x < map.Width(); x++)
+        {
+            for (var y = 0; y < map.Height(); y++)
+            {
+                if (x != startPos.X || y != startPos.Y)
+                {
+                    if (map[x, y] != '#')
+                    {
+                        map[x, y] = '#';
+
+                        if (EndsInLoop(map, startPos, Direction.Up))
+                        {
+                            result.Add(new Point(x, y));
+                        }
+
+                        map[x, y] = '.';
+                    }
+                }
+            }
+        }
+
+        return result.Count.ToString();
+    }
+
+    private bool EndsInLoop(char[,] map, Point startPos, Direction direction)
+    {
+        var seen = new HashSet<(Point pos, Direction dir)>();
+        var pos = startPos;
+
+        while (map.IsValidPoint(pos))
+        {
+            if (!seen.Add((pos, direction)))
+            {
+                return true;
+            }
+
+            var newPos = pos.Move(direction);
+
+            while (map.IsValidPoint(newPos) && map[newPos.X, newPos.Y] == '#')
+            {
+                direction = direction.TurnRight();
+                newPos = pos.Move(direction);
+            }
+
+            pos = newPos;
+        }
+
+        return false;
     }
 }

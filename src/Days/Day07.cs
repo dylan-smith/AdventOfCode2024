@@ -11,16 +11,16 @@ public class Day07 : BaseDay
         return good.Sum(x => x.Answer).ToString();
     }
 
-    private bool IsEquationTrue(long answer, IEnumerable<long> numbers, bool partTwo = false)
+    private bool IsEquationTrue(long answer, List<long> numbers, bool partTwo = false)
     {
-        if (numbers.Count() == 1)
+        if (numbers.Count == 1)
         {
-            return answer == numbers.First();
+            return answer == numbers[0];
         }
 
         // addition
-        var newNumbers = numbers.Skip(1);
-        var newAnswer = answer - numbers.First();
+        var newNumbers = numbers.Skip(1).ToList();
+        var newAnswer = answer - numbers[0];
 
         if (newAnswer >= 0 && IsEquationTrue(newAnswer, newNumbers, partTwo))
         {
@@ -28,8 +28,8 @@ public class Day07 : BaseDay
         }
 
         // multiplication
-        newAnswer = answer / numbers.First();
-        var remainder = answer % numbers.First();
+        newAnswer = answer / numbers[0];
+        var remainder = answer % numbers[0];
 
         if (remainder == 0 && IsEquationTrue(newAnswer, newNumbers, partTwo))
         {
@@ -37,9 +37,9 @@ public class Day07 : BaseDay
         }
 
         // concatenation
-        if (partTwo && answer.ToString().EndsWith(numbers.First().ToString()))
+        if (partTwo && answer.ToString().EndsWith(numbers[0].ToString()))
         {
-            newAnswer = long.Parse(answer.ToString().ShaveRight(numbers.First().ToString().Length));
+            newAnswer = long.Parse(answer.ToString().ShaveRight(numbers[0].ToString().Length));
 
             if (IsEquationTrue(newAnswer, newNumbers, partTwo))
             {
@@ -50,14 +50,14 @@ public class Day07 : BaseDay
         return false;
     }
 
-    private (long Answer, IEnumerable<long> Numbers) ParseEquation(string line)
+    private (long Answer, List<long> Numbers) ParseEquation(string line)
     {
         var parts = line.Split(new string[] { " ", ":" }, StringSplitOptions.RemoveEmptyEntries);
 
         var answer = long.Parse(parts.First());
         var numbers = parts.Skip(1).Select(long.Parse);
 
-        return (answer, numbers.Reverse());
+        return (answer, numbers.Reverse().ToList());
     }
 
     public override string PartTwo(string input)

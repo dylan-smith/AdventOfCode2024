@@ -5,65 +5,47 @@ public class Day09 : BaseDay
 {
     public override string PartOne(string input)
     {
-        
-        
-
         var disk = BuildDisk(input.Trim());
 
-        
+        var lastFilePosition = GetLastFilePosition(disk);
+        var firstFreeSpace = GetFirstFreeSpacePosition(disk);
 
-        var lastFileBlock = 0;
-        var lastFileBlockPosition = 0;
-
-        for (var i = disk.Count - 1; i >= 0; i--)
+        while (firstFreeSpace < lastFilePosition)
         {
-            if (disk[i] != -1)
-            {
-                lastFileBlock = disk[i];
-                lastFileBlockPosition = i;
-                break;
-            }
+            disk[firstFreeSpace] = disk[lastFilePosition];
+            disk[lastFilePosition] = -1;
+
+            lastFilePosition = GetLastFilePosition(disk);
+            firstFreeSpace = GetFirstFreeSpacePosition(disk);
         }
 
-        var firstFreeSpace = 0;
+        return CalcChecksum(disk).ToString();
+    }
 
+    private int GetFirstFreeSpacePosition(List<int> disk)
+    {
         for (var i = 0; i < disk.Count; i++)
         {
             if (disk[i] == -1)
             {
-                firstFreeSpace = i;
-                break;
+                return i;
             }
         }
 
-        while (firstFreeSpace < lastFileBlockPosition)
+        return -1;
+    }
+
+    private int GetLastFilePosition(List<int> disk)
+    {
+        for (var i = disk.Count - 1; i >= 0; i--)
         {
-            disk[firstFreeSpace] = lastFileBlock;
-            disk[lastFileBlockPosition] = -1;
-
-            for (var i = disk.Count - 1; i >= 0; i--)
+            if (disk[i] != -1)
             {
-                if (disk[i] != -1)
-                {
-                    lastFileBlock = disk[i];
-                    lastFileBlockPosition = i;
-                    break;
-                }
-            }
-
-            for (var i = 0; i < disk.Count; i++)
-            {
-                if (disk[i] == -1)
-                {
-                    firstFreeSpace = i;
-                    break;
-                }
+                return i;
             }
         }
 
-        var checksum = CalcChecksum(disk);
-
-        return checksum.ToString();
+        return -1;
     }
 
     private List<int> BuildDisk(string input)

@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 9)]
 public class Day09 : BaseDay
@@ -98,15 +96,15 @@ public class Day09 : BaseDay
 
         for (var i = fileLocations.Count - 1; i >= 0; i--)
         {
-            var newLocation = freespaceLocations.Where(x => x.position < fileLocations[i].position).Where(x => x.length >= fileLocations[i].length).FirstOrDefault();
+            var newLocation = FindFreespaceWithRoom(fileLocations[i].position, fileLocations[i].length, freespaceLocations);
 
-            if (newLocation != default)
+            if (newLocation >= 0)
             {
-                fileLocations[i] = (fileLocations[i].id, fileLocations[i].length, newLocation.position);
+                fileLocations[i] = (fileLocations[i].id, fileLocations[i].length, freespaceLocations[newLocation].position);
                 
                 for (var j = 0; j < freespaceLocations.Count; j++)
                 {
-                    if (freespaceLocations[j].position == newLocation.position)
+                    if (freespaceLocations[j].position == freespaceLocations[newLocation].position)
                     {
                         freespaceLocations[j] = (freespaceLocations[j].length - fileLocations[i].length, freespaceLocations[j].position + fileLocations[i].length);
                         break;
@@ -115,6 +113,29 @@ public class Day09 : BaseDay
             }
         }
 
+        return CalcChecksum(fileLocations).ToString();
+    }
+
+    private int FindFreespaceWithRoom(int position, int length, List<(int length, int position)> freespaceLocations)
+    {
+        for (var i = 0; i < freespaceLocations.Count; i++)
+        {
+            if (freespaceLocations[i].position > position)
+            {
+                return -1;
+            }
+
+            if (freespaceLocations[i].length >= length)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private long CalcChecksum(List<(int id, int length, int position)> fileLocations)
+    {
         var checksum = 0L;
 
         foreach (var (id, length, position) in fileLocations)
@@ -125,7 +146,7 @@ public class Day09 : BaseDay
             }
         }
 
-        return checksum.ToString();
+        return checksum;
     }
 
     private (List<(int id, int length, int position)> fileLocations, List<(int length, int position)> freespaceLocations) ProcessInput(string input)

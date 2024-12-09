@@ -59,8 +59,71 @@ public class Day08 : BaseDay
         return new[] { new Point(x1, y1), new Point(x2, y2) };
     }
 
+    private IEnumerable<Point> GetAntinodes2(Point point1, Point point2, char[,] map)
+    {
+        var xDelta = point2.X - point1.X;
+        var yDelta = point2.Y - point1.Y;
+
+        var result = new List<Point>();
+
+        var x = point2.X;
+        var y = point2.Y;
+
+        while (map.IsValidPoint(new Point(x, y)))
+        {
+            result.Add(new Point(x, y));
+
+            x += xDelta;
+            y += yDelta;
+        }
+
+        x = point1.X;
+        y = point1.Y;
+
+        while (map.IsValidPoint(new Point(x, y)))
+        {
+            result.Add(new Point(x, y));
+
+            x -= xDelta;
+            y -= yDelta;
+        }
+
+        return result;
+    }
+
     public override string PartTwo(string input)
     {
-        return string.Empty;
+        var map = input.CreateCharGrid();
+        var frequencies = new Dictionary<char, List<Point>>();
+        var nodes = new HashSet<Point>();
+
+        for (var x = 0; x < map.Width(); x++)
+        {
+            for (var y = 0; y < map.Height(); y++)
+            {
+                if (map[x, y] != '.')
+                {
+                    if (!frequencies.ContainsKey(map[x, y]))
+                    {
+                        frequencies.Add(map[x, y], new List<Point>());
+                    }
+
+                    frequencies[map[x, y]].Add(new Point(x, y));
+                }
+            }
+        }
+
+        foreach (var f in frequencies.Keys)
+        {
+            var pairs = frequencies[f].GetCombinations(2);
+
+            foreach (var pair in pairs)
+            {
+                var antinodes = GetAntinodes2(pair.First(), pair.Last(), map);
+                nodes.AddRange(antinodes);
+            }
+        }
+
+        return nodes.Count.ToString();
     }
 }

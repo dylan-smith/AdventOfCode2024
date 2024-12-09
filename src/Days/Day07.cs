@@ -1,5 +1,4 @@
-﻿
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 7)]
 public class Day07 : BaseDay
@@ -9,17 +8,10 @@ public class Day07 : BaseDay
         var equations = input.ParseLines(ParseEquation).ToList();
 
         var good = equations.Where(x => IsEquationTrue(x.Answer, x.Numbers)).ToList();
-
-        foreach (var g in good)
-        {
-            Log($"GOOD EQUATION: {g.Answer}");
-            IsEquationTrue(g.Answer, g.Numbers);
-        }
-
         return good.Sum(x => x.Answer).ToString();
     }
 
-    private bool IsEquationTrue(long answer, IEnumerable<long> numbers)
+    private bool IsEquationTrue(long answer, IEnumerable<long> numbers, bool partTwo = false)
     {
         if (numbers.Count() == 1)
         {
@@ -30,7 +22,7 @@ public class Day07 : BaseDay
         var newNumbers = numbers.Skip(1);
         var newAnswer = answer - numbers.First();
 
-        if (IsEquationTrue(newAnswer, newNumbers))
+        if (newAnswer >= 0 && IsEquationTrue(newAnswer, newNumbers, partTwo))
         {
             Log($"{numbers.First()} + ...");
             return true;
@@ -40,48 +32,18 @@ public class Day07 : BaseDay
         newAnswer = answer / numbers.First();
         var remainder = answer % numbers.First();
 
-        if (remainder == 0 && IsEquationTrue(newAnswer, newNumbers))
-        {
-            Log($"{numbers.First()} * ...");
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool IsEquationTrue2(long answer, IEnumerable<long> numbers)
-    {
-        if (numbers.Count() == 1)
-        {
-            return answer == numbers.First();
-        }
-
-        // addition
-        var newNumbers = numbers.Skip(1);
-        var newAnswer = answer - numbers.First();
-
-        if (newAnswer >= 0 && IsEquationTrue2(newAnswer, newNumbers))
-        {
-            Log($"{numbers.First()} + ...");
-            return true;
-        }
-
-        // multiplication
-        newAnswer = answer / numbers.First();
-        var remainder = answer % numbers.First();
-
-        if (remainder == 0 && IsEquationTrue2(newAnswer, newNumbers))
+        if (remainder == 0 && IsEquationTrue(newAnswer, newNumbers, partTwo))
         {
             Log($"{numbers.First()} * ...");
             return true;
         }
 
         // concatenation
-        if (answer.ToString().EndsWith(numbers.First().ToString()))
+        if (partTwo && answer.ToString().EndsWith(numbers.First().ToString()))
         {
             newAnswer = long.Parse(answer.ToString().ShaveRight(numbers.First().ToString().Length));
 
-            if (IsEquationTrue2(newAnswer, newNumbers))
+            if (IsEquationTrue(newAnswer, newNumbers, partTwo))
             {
                 Log($"{numbers.First()} || ...");
                 return true;
@@ -105,14 +67,7 @@ public class Day07 : BaseDay
     {
         var equations = input.ParseLines(ParseEquation).ToList();
 
-        var good = equations.Where(x => IsEquationTrue2(x.Answer, x.Numbers)).ToList();
-
-        foreach (var g in good)
-        {
-            Log($"GOOD EQUATION: {g.Answer}");
-            IsEquationTrue2(g.Answer, g.Numbers);
-        }
-
+        var good = equations.Where(x => IsEquationTrue(x.Answer, x.Numbers, true)).ToList();
         return good.Sum(x => x.Answer).ToString();
     }
 }

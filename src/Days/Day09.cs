@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Days;
+﻿using System.Windows.Input;
+
+namespace AdventOfCode.Days;
 
 [Day(2024, 9)]
 public class Day09 : BaseDay
@@ -22,9 +24,9 @@ public class Day09 : BaseDay
         return CalcChecksum(disk).ToString();
     }
 
-    private int GetFirstFreeSpacePosition(List<int> disk, int previous = -1)
+    private int GetFirstFreeSpacePosition(List<int> disk, int start = -1)
     {
-        for (var i = previous + 1; i < disk.Count; i++)
+        for (var i = start + 1; i < disk.Count; i++)
         {
             if (disk[i] == -1)
             {
@@ -35,9 +37,9 @@ public class Day09 : BaseDay
         return -1;
     }
 
-    private int GetLastFilePosition(List<int> disk, int previous)
+    private int GetLastFilePosition(List<int> disk, int start)
     {
-        for (var i = previous - 1; i >= 0; i--)
+        for (var i = start - 1; i >= 0; i--)
         {
             if (disk[i] != -1)
             {
@@ -92,30 +94,7 @@ public class Day09 : BaseDay
 
     public override string PartTwo(string input)
     {
-        var freespace = false;
-        var id = 0;
-        var pos = 0;
-
-        var fileLocations = new List<(int id, int length, int position)>();
-        var freespaceLocations = new List<(int length, int position)>();
-
-        foreach (var c in input.Trim())
-        {
-            var value = int.Parse($"{c}");
-
-            if (!freespace)
-            {
-                fileLocations.Add((id++, value, pos));
-                pos += value;
-            }
-            else
-            {
-                freespaceLocations.Add((value, pos));
-                pos += value;
-            }
-
-            freespace = !freespace;
-        }
+        var (fileLocations, freespaceLocations) = ProcessInput(input.Trim());
 
         for (var i = fileLocations.Count - 1; i >= 0; i--)
         {
@@ -138,14 +117,44 @@ public class Day09 : BaseDay
 
         var checksum = 0L;
 
-        foreach (var file in fileLocations)
+        foreach (var (id, length, position) in fileLocations)
         {
-            for (var i = 0; i < file.length; i++)
+            for (var i = 0; i < length; i++)
             {
-                checksum += (file.position + i) * file.id;
+                checksum += (position + i) * id;
             }
         }
 
         return checksum.ToString();
+    }
+
+    private (List<(int id, int length, int position)> fileLocations, List<(int length, int position)> freespaceLocations) ProcessInput(string input)
+    {
+        var fileLocations = new List<(int id, int length, int position)>();
+        var freespaceLocations = new List<(int length, int position)>();
+
+        var freespace = false;
+        var id = 0;
+        var pos = 0;
+
+        foreach (var c in input.Trim())
+        {
+            var value = int.Parse($"{c}");
+
+            if (!freespace)
+            {
+                fileLocations.Add((id++, value, pos));
+                pos += value;
+            }
+            else
+            {
+                freespaceLocations.Add((value, pos));
+                pos += value;
+            }
+
+            freespace = !freespace;
+        }
+
+        return (fileLocations, freespaceLocations);
     }
 }

@@ -12,15 +12,19 @@ public class Day06 : BaseDay
         return FindGuardRoute(map).Count.ToString();
     }
 
-    private HashSet<Point> FindGuardRoute(char[,] map)
+    private Dictionary<Point, (Point prev, Direction dir)> FindGuardRoute(char[,] map)
     {
-        var seen = new HashSet<Point>();
+        var seen = new Dictionary<Point, (Point prev, Direction dir)>();
         var pos = map.GetPoints('^').First();
         var direction = Direction.Up;
+        Point prev = new(-1, -1);
 
         while (map.IsValidPoint(pos))
         {
-            seen.Add(pos);
+            if (!seen.ContainsKey(pos))
+            {
+                seen.Add(pos, (prev, direction));
+            }
             var newPos = pos.Move(direction);
 
             while (map.IsValidPoint(newPos) && map[newPos.X, newPos.Y] == '#')
@@ -29,6 +33,7 @@ public class Day06 : BaseDay
                 newPos = pos.Move(direction);
             }
 
+            prev = pos;
             pos = newPos;
         }
 
@@ -43,7 +48,7 @@ public class Day06 : BaseDay
 
         var route = FindGuardRoute(map);
 
-        foreach (var point in route)
+        foreach (var point in route.Keys)
         {
             if (point.X != startPos.X || point.Y != startPos.Y)
             {
@@ -51,7 +56,7 @@ public class Day06 : BaseDay
                 {
                     map[point.X, point.Y] = '#';
 
-                    if (EndsInLoop(map, startPos, Direction.Up))
+                    if (EndsInLoop(map, route[point].prev, route[point].dir))
                     {
                         result.Add(new Point(point.X, point.Y));
                     }

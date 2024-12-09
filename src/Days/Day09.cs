@@ -98,15 +98,15 @@ public class Day09 : BaseDay
 
         for (var i = fileLocations.Count - 1; i >= 0; i--)
         {
-            var newLocations = freespaceLocations.Where(x => x.position < fileLocations[i].position).Where(x => x.length >= fileLocations[i].length).ToList();
+            var newLocation = freespaceLocations.Where(x => x.position < fileLocations[i].position).Where(x => x.length >= fileLocations[i].length).FirstOrDefault();
 
-            if (newLocations.Any())
+            if (newLocation != default)
             {
-                fileLocations[i] = (fileLocations[i].id, fileLocations[i].length, newLocations.First().position);
+                fileLocations[i] = (fileLocations[i].id, fileLocations[i].length, newLocation.position);
                 
                 for (var j = 0; j < freespaceLocations.Count; j++)
                 {
-                    if (freespaceLocations[j].position == newLocations.First().position)
+                    if (freespaceLocations[j].position == newLocation.position)
                     {
                         freespaceLocations[j] = (freespaceLocations[j].length - fileLocations[i].length, freespaceLocations[j].position + fileLocations[i].length);
                         break;

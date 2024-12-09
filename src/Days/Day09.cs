@@ -7,7 +7,7 @@ public class Day09 : BaseDay
     {
         var disk = BuildDisk(input.Trim());
 
-        var lastFilePosition = GetLastFilePosition(disk);
+        var lastFilePosition = GetLastFilePosition(disk, disk.Count);
         var firstFreeSpace = GetFirstFreeSpacePosition(disk);
 
         while (firstFreeSpace < lastFilePosition)
@@ -15,16 +15,16 @@ public class Day09 : BaseDay
             disk[firstFreeSpace] = disk[lastFilePosition];
             disk[lastFilePosition] = -1;
 
-            lastFilePosition = GetLastFilePosition(disk);
-            firstFreeSpace = GetFirstFreeSpacePosition(disk);
+            lastFilePosition = GetLastFilePosition(disk, lastFilePosition);
+            firstFreeSpace = GetFirstFreeSpacePosition(disk, firstFreeSpace);
         }
 
         return CalcChecksum(disk).ToString();
     }
 
-    private int GetFirstFreeSpacePosition(List<int> disk)
+    private int GetFirstFreeSpacePosition(List<int> disk, int previous = -1)
     {
-        for (var i = 0; i < disk.Count; i++)
+        for (var i = previous + 1; i < disk.Count; i++)
         {
             if (disk[i] == -1)
             {
@@ -35,9 +35,9 @@ public class Day09 : BaseDay
         return -1;
     }
 
-    private int GetLastFilePosition(List<int> disk)
+    private int GetLastFilePosition(List<int> disk, int previous)
     {
-        for (var i = disk.Count - 1; i >= 0; i--)
+        for (var i = previous - 1; i >= 0; i--)
         {
             if (disk[i] != -1)
             {

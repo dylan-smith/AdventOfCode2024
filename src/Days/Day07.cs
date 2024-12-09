@@ -24,7 +24,6 @@ public class Day07 : BaseDay
 
         if (newAnswer >= 0 && IsEquationTrue(newAnswer, newNumbers, partTwo))
         {
-            Log($"{numbers.First()} + ...");
             return true;
         }
 
@@ -34,7 +33,6 @@ public class Day07 : BaseDay
 
         if (remainder == 0 && IsEquationTrue(newAnswer, newNumbers, partTwo))
         {
-            Log($"{numbers.First()} * ...");
             return true;
         }
 
@@ -45,7 +43,6 @@ public class Day07 : BaseDay
 
             if (IsEquationTrue(newAnswer, newNumbers, partTwo))
             {
-                Log($"{numbers.First()} || ...");
                 return true;
             }
         }

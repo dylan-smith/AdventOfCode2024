@@ -1,38 +1,16 @@
-﻿
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 9)]
 public class Day09 : BaseDay
 {
     public override string PartOne(string input)
     {
-        var disk = new List<int>();
-        var freespace = false;
-        var id = 0;
+        
+        
 
-        foreach (var c in input.Trim())
-        {
-            var value = int.Parse($"{c}");
+        var disk = BuildDisk(input.Trim());
 
-            if (!freespace)
-            {
-                for (var i = 0; i < value; i++)
-                {
-                    disk.Add(id);
-                }
-
-                id++;
-            }
-            else
-            {
-                for (var i = 0; i < value; i++)
-                {
-                    disk.Add(-1);
-                }
-            }
-
-            freespace = !freespace;
-        }
+        
 
         var lastFileBlock = 0;
         var lastFileBlockPosition = 0;
@@ -86,6 +64,32 @@ public class Day09 : BaseDay
         var checksum = CalcChecksum(disk);
 
         return checksum.ToString();
+    }
+
+    private List<int> BuildDisk(string input)
+    {
+        var disk = new List<int>();
+        var freespace = false;
+        var id = 0;
+
+        foreach (var c in input)
+        {
+            var value = int.Parse(c.ToString());
+
+            if (!freespace)
+            {
+                disk.AddMany(id, value);
+                id++;
+            }
+            else
+            {
+                disk.AddMany(-1, value);
+            }
+
+            freespace = !freespace;
+        }
+
+        return disk;
     }
 
     private object CalcChecksum(List<int> disk)

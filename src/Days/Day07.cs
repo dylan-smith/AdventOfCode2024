@@ -49,6 +49,48 @@ public class Day07 : BaseDay
         return false;
     }
 
+    private bool IsEquationTrue2(long answer, IEnumerable<long> numbers)
+    {
+        if (numbers.Count() == 1)
+        {
+            return answer == numbers.First();
+        }
+
+        // addition
+        var newNumbers = numbers.Skip(1);
+        var newAnswer = answer - numbers.First();
+
+        if (newAnswer >= 0 && IsEquationTrue2(newAnswer, newNumbers))
+        {
+            Log($"{numbers.First()} + ...");
+            return true;
+        }
+
+        // multiplication
+        newAnswer = answer / numbers.First();
+        var remainder = answer % numbers.First();
+
+        if (remainder == 0 && IsEquationTrue2(newAnswer, newNumbers))
+        {
+            Log($"{numbers.First()} * ...");
+            return true;
+        }
+
+        // concatenation
+        if (answer.ToString().EndsWith(numbers.First().ToString()))
+        {
+            newAnswer = long.Parse(answer.ToString().ShaveRight(numbers.First().ToString().Length));
+
+            if (IsEquationTrue2(newAnswer, newNumbers))
+            {
+                Log($"{numbers.First()} || ...");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private (long Answer, IEnumerable<long> Numbers) ParseEquation(string line)
     {
         var parts = line.Split(new string[] { " ", ":" }, StringSplitOptions.RemoveEmptyEntries);
@@ -61,6 +103,16 @@ public class Day07 : BaseDay
 
     public override string PartTwo(string input)
     {
-        return string.Empty;
+        var equations = input.ParseLines(ParseEquation).ToList();
+
+        var good = equations.Where(x => IsEquationTrue2(x.Answer, x.Numbers)).ToList();
+
+        foreach (var g in good)
+        {
+            Log($"GOOD EQUATION: {g.Answer}");
+            IsEquationTrue2(g.Answer, g.Numbers);
+        }
+
+        return good.Sum(x => x.Answer).ToString();
     }
 }

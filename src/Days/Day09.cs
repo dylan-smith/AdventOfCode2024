@@ -106,6 +106,60 @@ public class Day09 : BaseDay
 
     public override string PartTwo(string input)
     {
-        return string.Empty;
+        var freespace = false;
+        var id = 0;
+        var pos = 0;
+
+        var fileLocations = new List<(int id, int length, int position)>();
+        var freespaceLocations = new List<(int length, int position)>();
+
+        foreach (var c in input.Trim())
+        {
+            var value = int.Parse($"{c}");
+
+            if (!freespace)
+            {
+                fileLocations.Add((id++, value, pos));
+                pos += value;
+            }
+            else
+            {
+                freespaceLocations.Add((value, pos));
+                pos += value;
+            }
+
+            freespace = !freespace;
+        }
+
+        for (var i = fileLocations.Count - 1; i >= 0; i--)
+        {
+            var newLocations = freespaceLocations.Where(x => x.position < fileLocations[i].position).Where(x => x.length >= fileLocations[i].length).ToList();
+
+            if (newLocations.Any())
+            {
+                fileLocations[i] = (fileLocations[i].id, fileLocations[i].length, newLocations.First().position);
+                
+                for (var j = 0; j < freespaceLocations.Count; j++)
+                {
+                    if (freespaceLocations[j].position == newLocations.First().position)
+                    {
+                        freespaceLocations[j] = (freespaceLocations[j].length - fileLocations[i].length, freespaceLocations[j].position + fileLocations[i].length);
+                        break;
+                    }
+                }
+            }
+        }
+
+        var checksum = 0L;
+
+        foreach (var file in fileLocations)
+        {
+            for (var i = 0; i < file.length; i++)
+            {
+                checksum += (file.position + i) * file.id;
+            }
+        }
+
+        return checksum.ToString();
     }
 }

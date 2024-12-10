@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using System.Text.RegularExpressions;
-using System.Windows.Controls;
 
 namespace AdventOfCode.Days;
 

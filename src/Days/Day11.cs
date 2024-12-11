@@ -38,9 +38,9 @@ public class Day11 : BaseDay
             return 1;
         }
 
-        if (cache.ContainsKey((stone, blinks)))
+        if (cache.TryGetValue((stone, blinks), out var cachedResult))
         {
-            return cache[(stone, blinks)];
+            return cachedResult;
         }
 
         long result;
@@ -48,27 +48,35 @@ public class Day11 : BaseDay
         if (stone == 0)
         {
             result = ProcessStone(1, blinks - 1);
-
-            return result;
         }
-        else if (stone.ToString().Length % 2 == 0)
+        else if (GetDigitCount(stone) % 2 == 0)
         {
-            var txt = stone.ToString();
-            var len = txt.Length / 2;
-
-            var left = long.Parse(txt[..len]);
-            var right = long.Parse(txt[len..]);
-
+            var (left, right) = SplitNumber(stone);
             result = ProcessStone(left, blinks - 1) + ProcessStone(right, blinks - 1);
-
-            return result;
         }
         else
         {
             result = ProcessStone(stone * 2024, blinks - 1);
         }
 
-        cache.Add((stone, blinks), result);
+        cache[(stone, blinks)] = result;
         return result;
+    }
+
+    private static int GetDigitCount(long number)
+    {
+        return (int)Math.Floor(Math.Log10(number) + 1);
+    }
+
+    private static (long left, long right) SplitNumber(long number)
+    {
+        var digitCount = GetDigitCount(number);
+        var halfDigitCount = digitCount / 2;
+        var divisor = (long)Math.Pow(10, halfDigitCount);
+
+        var left = number / divisor;
+        var right = number % divisor;
+
+        return (left, right);
     }
 }

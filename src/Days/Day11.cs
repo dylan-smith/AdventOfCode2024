@@ -1,57 +1,24 @@
-﻿
-using System.Xml.Linq;
-
-namespace AdventOfCode.Days;
+﻿namespace AdventOfCode.Days;
 
 [Day(2024, 11)]
 public class Day11 : BaseDay
 {
     public override string PartOne(string input)
     {
-        var stones = new LinkedList<long>(input.Longs());
+        var values = input.Longs();
+        var result = 0L;
 
-        for (var i = 0; i < 25; i++)
+        foreach (var stone in values)
         {
-            var node = stones.First;
-
-            //var txt = "";
-
-            //foreach (var x in stones)
-            //{
-            //    txt += x.ToString() + " ";
-            //}
-
-            //Log(txt);
-
-            while (node != null)
-            {
-                if (node.Value == 0)
-                {
-                    node.Value = 1;
-                }
-                else if (node.Value.ToString().Length % 2 == 0)
-                {
-                    stones.AddBefore(node, long.Parse(node.Value.ToString()[..(node.Value.ToString().Length / 2)]));
-                    stones.AddBefore(node, long.Parse(node.Value.ToString()[(node.Value.ToString().Length / 2)..]));
-                    var right = node.Previous;
-                    stones.Remove(node);
-                    node = right;
-                }
-                else
-                {
-                    node.Value *= 2024;
-                }
-
-                node = node.Next;
-            }
+            result += ProcessStone(stone, 25);
         }
 
-        return stones.Count.ToString();
+        return result.ToString();
     }
 
     public override string PartTwo(string input)
     {
-        var values = input.Longs().ToList();
+        var values = input.Longs();
         var result = 0L;
 
         foreach (var stone in values)
@@ -62,7 +29,7 @@ public class Day11 : BaseDay
         return result.ToString();
     }
 
-    private readonly Dictionary<long, Dictionary<int, long>> cache = new Dictionary<long, Dictionary<int, long>>();
+    private readonly Dictionary<long, Dictionary<int, long>> cache = new();
 
     private long ProcessStone(long stone, int blinks)
     {

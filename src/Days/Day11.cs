@@ -56,12 +56,15 @@ public class Day11 : BaseDay
         {
             result = ProcessStone(1, blinks - 1);
 
-            return result; ;
+            return result;
         }
         else if (stone.ToString().Length % 2 == 0)
         {
-            var left = long.Parse(stone.ToString()[..(stone.ToString().Length / 2)]);
-            var right = long.Parse(stone.ToString()[(stone.ToString().Length / 2)..]);
+            var txt = stone.ToString();
+            var len = txt.Length / 2;
+
+            var left = long.Parse(txt[..len]);
+            var right = long.Parse(txt[len..]);
 
             result = ProcessStone(left, blinks - 1) + ProcessStone(right, blinks - 1);
 

@@ -33,7 +33,7 @@ public class Day11 : BaseDay
 
     private long ProcessStone(long stone, int blinks)
     {
-        if (blinks == 0)
+        if (blinks <= 0)
         {
             return 1;
         }
@@ -47,7 +47,7 @@ public class Day11 : BaseDay
 
         if (stone == 0)
         {
-            result = ProcessStone(1, blinks - 1);
+            result = ProcessStone(2024, blinks - 2);
         }
         else if (GetDigitCount(stone) % 2 == 0)
         {

@@ -29,7 +29,7 @@ public class Day11 : BaseDay
         return result.ToString();
     }
 
-    private readonly Dictionary<long, Dictionary<int, long>> cache = new();
+    private readonly Dictionary<(long, int), long> cache = new();
 
     private long ProcessStone(long stone, int blinks)
     {
@@ -38,16 +38,9 @@ public class Day11 : BaseDay
             return 1;
         }
 
-        if (cache.ContainsKey(stone))
+        if (cache.ContainsKey((stone, blinks)))
         {
-            if (cache[stone].ContainsKey(blinks))
-            {
-                return cache[stone][blinks];
-            }
-        }
-        else
-        {
-            cache.Add(stone, new Dictionary<int, long>());
+            return cache[(stone, blinks)];
         }
 
         long result;
@@ -75,7 +68,7 @@ public class Day11 : BaseDay
             result = ProcessStone(stone * 2024, blinks - 1);
         }
 
-        cache[stone].SafeSet(blinks, result);
+        cache.Add((stone, blinks), result);
         return result;
     }
 }

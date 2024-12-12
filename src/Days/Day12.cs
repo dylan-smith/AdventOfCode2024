@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Reflection.Metadata;
 
 namespace AdventOfCode.Days;
 
@@ -41,13 +40,11 @@ public class Day12 : BaseDay
     private (char name, List<Point> points) ExpandRegion(char[,] map, Point startPoint)
     {
         var name = map[startPoint.X, startPoint.Y];
-        var points = new List<Point>();
+        var points = new List<Point>() { startPoint };
         var newPoints = new List<Point>() { startPoint };
 
         while (newPoints.Any())
         {
-            points.AddRange(newPoints);
-
             var prev = new List<Point>();
 
             prev.AddRange(newPoints);
@@ -57,9 +54,10 @@ public class Day12 : BaseDay
             {
                 foreach (var neighbor in point.GetNeighbors(includeDiagonals: false))
                 {
-                    if (map.IsValidPoint(neighbor) && map[neighbor.X, neighbor.Y] == name && !points.Contains(neighbor) && !newPoints.Contains(neighbor))
+                    if (map.IsValidPoint(neighbor) && map[neighbor.X, neighbor.Y] == name && !points.Contains(neighbor))
                     {
                         newPoints.Add(neighbor);
+                        points.Add(neighbor);
                     }
                 }
             }

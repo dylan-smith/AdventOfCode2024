@@ -106,20 +106,20 @@ public class Day12 : BaseDay
                     {
                         used.Add((aPoint, bPoint, fence.dir));
                         x++;
-                        aPoint = new Point(x + 1, fence.a.Y);
-                        bPoint = new Point(x + 1, fence.b.Y);
+                        aPoint.X = x + 1;
+                        bPoint.X = x + 1;
                     }
 
                     x = fence.a.X;
-                    aPoint = new Point(x - 1, fence.a.Y);
-                    bPoint = new Point(x - 1, fence.b.Y);
+                    aPoint.X = x - 1;
+                    bPoint.X = x - 1;
 
                     while (fences.Contains((aPoint, bPoint, fence.dir)))
                     {
                         used.Add((aPoint, bPoint, fence.dir));
                         x--;
-                        aPoint = new Point(x - 1, fence.a.Y);
-                        bPoint = new Point(x - 1, fence.b.Y);
+                        aPoint.X = x - 1;
+                        bPoint.X = x - 1;
                     }
                 }
                 else
@@ -132,20 +132,20 @@ public class Day12 : BaseDay
                     {
                         used.Add((aPoint, bPoint, fence.dir));
                         y++;
-                        aPoint = new Point(fence.a.X, y + 1);
-                        bPoint = new Point(fence.b.X, y + 1);
+                        aPoint.Y = y + 1;
+                        bPoint.Y = y + 1;
                     }
 
                     y = fence.a.Y;
-                    aPoint = new Point(fence.a.X, y - 1);
-                    bPoint = new Point(fence.b.X, y - 1);
+                    aPoint.Y = y - 1;
+                    bPoint.Y = y - 1;
 
                     while (fences.Contains((aPoint, bPoint, fence.dir)))
                     {
                         used.Add((aPoint, bPoint, fence.dir));
                         y--;
-                        aPoint = new Point(fence.a.X, y - 1);
-                        bPoint = new Point(fence.b.X, y - 1);
+                        aPoint.Y = y - 1;
+                        bPoint.Y = y - 1;
                     }
                 }
             }

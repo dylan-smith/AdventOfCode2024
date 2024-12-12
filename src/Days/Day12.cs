@@ -130,21 +130,21 @@ public class Day12 : BaseDay
 
                 used.Add(fence);
 
-                if (fence.dir == Direction.Right)
+                if (fence.dir is Direction.Right or Direction.Left)
                 {
                     var x = fence.a.X;
 
-                    while (fences.Contains((new Point(x + 1, fence.a.Y), new Point(x + 1, fence.b.Y), Direction.Right)))
+                    while (fences.Contains((new Point(x + 1, fence.a.Y), new Point(x + 1, fence.b.Y), fence.dir)))
                     {
-                        used.Add((new Point(x + 1, fence.a.Y), new Point(x + 1, fence.b.Y), Direction.Right));
+                        used.Add((new Point(x + 1, fence.a.Y), new Point(x + 1, fence.b.Y), fence.dir));
                         x++;
                     }
 
                     x = fence.a.X;
 
-                    while (fences.Contains((new Point(x - 1, fence.a.Y), new Point(x - 1, fence.b.Y), Direction.Right)))
+                    while (fences.Contains((new Point(x - 1, fence.a.Y), new Point(x - 1, fence.b.Y), fence.dir)))
                     {
-                        used.Add((new Point(x - 1, fence.a.Y), new Point(x - 1, fence.b.Y), Direction.Right));
+                        used.Add((new Point(x - 1, fence.a.Y), new Point(x - 1, fence.b.Y), fence.dir));
                         x--;
                     }
                 }
@@ -152,17 +152,17 @@ public class Day12 : BaseDay
                 {
                     var y = fence.a.Y;
 
-                    while (fences.Contains((new Point(fence.a.X, y + 1), new Point(fence.b.X, y + 1), Direction.Up)))
+                    while (fences.Contains((new Point(fence.a.X, y + 1), new Point(fence.b.X, y + 1), fence.dir)))
                     {
-                        used.Add((new Point(fence.a.X, y + 1), new Point(fence.b.X, y + 1), Direction.Up));
+                        used.Add((new Point(fence.a.X, y + 1), new Point(fence.b.X, y + 1), fence.dir));
                         y++;
                     }
 
                     y = fence.a.Y;
 
-                    while (fences.Contains((new Point(fence.a.X, y - 1), new Point(fence.b.X, y - 1), Direction.Up)))
+                    while (fences.Contains((new Point(fence.a.X, y - 1), new Point(fence.b.X, y - 1), fence.dir)))
                     {
-                        used.Add((new Point(fence.a.X, y - 1), new Point(fence.b.X, y - 1), Direction.Up));
+                        used.Add((new Point(fence.a.X, y - 1), new Point(fence.b.X, y - 1), fence.dir));
                         y--;
                     }
                 }
@@ -194,7 +194,7 @@ public class Day12 : BaseDay
                         }
                         else
                         {
-                            fences.Add((n, p, Direction.Right));
+                            fences.Add((n, p, Direction.Left));
                         }
                     }
                     else
@@ -205,7 +205,7 @@ public class Day12 : BaseDay
                         }
                         else
                         {
-                            fences.Add((n, p, Direction.Up));
+                            fences.Add((n, p, Direction.Down));
                         }
                     }
                 }

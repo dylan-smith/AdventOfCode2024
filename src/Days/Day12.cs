@@ -15,9 +15,9 @@ public class Day12 : BaseDay
         return result.ToString();
     }
 
-    private List<(char name, List<Point> points)> GetRegions(char[,] map)
+    private List<(char name, HashSet<Point> points)> GetRegions(char[,] map)
     {
-        var regions = new List<(char name, List<Point> points)>();
+        var regions = new List<(char name, HashSet<Point> points)>();
 
         for (var x = 0; x < map.Width(); x++)
         {
@@ -35,12 +35,12 @@ public class Day12 : BaseDay
         return regions;
     }
 
-    private bool PointInRegions(Point point, List<(char name, List<Point> points)> regions) => regions.Any(r => r.points.Contains(point));
+    private bool PointInRegions(Point point, List<(char name, HashSet<Point> points)> regions) => regions.Any(r => r.points.Contains(point));
 
-    private (char name, List<Point> points) ExpandRegion(char[,] map, Point startPoint)
+    private (char name, HashSet<Point> points) ExpandRegion(char[,] map, Point startPoint)
     {
         var name = map[startPoint.X, startPoint.Y];
-        var points = new List<Point>() { startPoint };
+        var points = new HashSet<Point>() { startPoint };
         var newPoints = new List<Point>() { startPoint };
 
         while (newPoints.Any())
@@ -82,7 +82,7 @@ public class Day12 : BaseDay
         return result.ToString();
     }
 
-    private int CountSides(List<Point> points)
+    private int CountSides(HashSet<Point> points)
     {
         var fences = GetFences(points);
         var used = new List<(Point a, Point b, Direction dir)>();
@@ -140,7 +140,7 @@ public class Day12 : BaseDay
         return sides;
     }
 
-    private List<(Point a, Point b, Direction dir)> GetFences(List<Point> points)
+    private List<(Point a, Point b, Direction dir)> GetFences(HashSet<Point> points)
     {
         var fences = new List<(Point a, Point b, Direction dir)>();
 

@@ -11,12 +11,7 @@ public class Day12 : BaseDay
         var map = input.CreateCharGrid();
         var regions = GetRegions(map);
 
-        var result = 0L;
-
-        foreach (var region in regions)
-        {
-            result += region.points.Count * GetFences(region.points).Count;
-        }
+        var result = regions.Sum(r => r.points.Count * GetFences(r.points).Count);
 
         return result.ToString();
     }
@@ -29,9 +24,11 @@ public class Day12 : BaseDay
         {
             for (var y = 0; y < map.Height(); y++)
             {
-                if (!PointInRegions(x, y, regions))
+                var point = new Point(x, y);
+
+                if (!PointInRegions(point, regions))
                 {
-                    regions.Add(ExpandRegion(map, x, y));
+                    regions.Add(ExpandRegion(map, point));
                 }
             }
         }
@@ -39,24 +36,13 @@ public class Day12 : BaseDay
         return regions;
     }
 
-    private bool PointInRegions(int x, int y, List<(char name, List<Point> points)> regions)
-    {
-        foreach (var (_, points) in regions)
-        {
-            if (points.Contains(new Point(x, y)))
-            {
-                return true;
-            }
-        }
+    private bool PointInRegions(Point point, List<(char name, List<Point> points)> regions) => regions.Any(r => r.points.Contains(point));
 
-        return false;
-    }
-
-    private (char name, List<Point> points) ExpandRegion(char[,] map, int x, int y)
+    private (char name, List<Point> points) ExpandRegion(char[,] map, Point startPoint)
     {
-        var name = map[x, y];
+        var name = map[startPoint.X, startPoint.Y];
         var points = new List<Point>();
-        var newPoints = new List<Point>() { new Point(x, y) };
+        var newPoints = new List<Point>() { startPoint };
 
         while (newPoints.Any())
         {

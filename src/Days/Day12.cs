@@ -18,6 +18,7 @@ public class Day12 : BaseDay
     private List<(char name, HashSet<Point> points)> GetRegions(char[,] map)
     {
         var regions = new List<(char name, HashSet<Point> points)>();
+        var used = new HashSet<Point>();
 
         for (var x = 0; x < map.Width(); x++)
         {
@@ -25,17 +26,17 @@ public class Day12 : BaseDay
             {
                 var point = new Point(x, y);
 
-                if (!PointInRegions(point, regions))
+                if (!used.Contains(point))
                 {
-                    regions.Add(ExpandRegion(map, point));
+                    var region = ExpandRegion(map, point);
+                    regions.Add(region);
+                    used.AddRange(region.points);
                 }
             }
         }
 
         return regions;
     }
-
-    private bool PointInRegions(Point point, List<(char name, HashSet<Point> points)> regions) => regions.Any(r => r.points.Contains(point));
 
     private (char name, HashSet<Point> points) ExpandRegion(char[,] map, Point startPoint)
     {

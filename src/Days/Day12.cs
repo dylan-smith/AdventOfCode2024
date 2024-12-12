@@ -15,25 +15,7 @@ public class Day12 : BaseDay
 
         foreach (var region in regions)
         {
-            var area = 0;
-            var perimeter = 0;
-
-            foreach (var p in region.points)
-            {
-                area++;
-
-                var neighbors = p.GetNeighbors(includeDiagonals: false);
-
-                foreach (var n in neighbors)
-                {
-                    if (!map.IsValidPoint(n) || map[n.X, n.Y] != map[p.X, p.Y])
-                    {
-                        perimeter++;
-                    }
-                }
-            }
-
-            result += area * GetFences(region.points).Count;
+            result += region.points.Count * GetFences(region.points).Count;
         }
 
         return result.ToString();

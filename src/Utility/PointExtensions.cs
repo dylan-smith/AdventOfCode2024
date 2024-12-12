@@ -151,5 +151,30 @@ namespace AdventOfCode
 
             return result;
         }
+
+        public static bool IsNeighbor(this Point point, Point candidate)
+        {
+            if (candidate.X == point.X && candidate.Y == point.Y + 1)
+            {
+                return true;
+            }
+
+            if (candidate.X == point.X && candidate.Y == point.Y - 1)
+            {
+                return true;
+            }
+
+            if (candidate.X == point.X + 1 && candidate.Y == point.Y)
+            {
+                return true;
+            }
+
+            if (candidate.X == point.X - 1 && candidate.Y == point.Y)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

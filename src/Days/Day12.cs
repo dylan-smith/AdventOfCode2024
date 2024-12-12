@@ -85,9 +85,9 @@ public class Day12 : BaseDay
     private int CountSides(HashSet<Point> points)
     {
         var fences = GetFences(points);
-        var used = new List<(Point a, Point b, Direction dir)>();
+        var used = new HashSet<(Point a, Point b, Direction dir)>();
         var sides = 0;
-        
+
         foreach (var fence in fences)
         {
             if (!used.Contains(fence))
@@ -99,50 +99,64 @@ public class Day12 : BaseDay
                 if (fence.dir is Direction.Right or Direction.Left)
                 {
                     var x = fence.a.X;
+                    var aPoint = new Point(x + 1, fence.a.Y);
+                    var bPoint = new Point(x + 1, fence.b.Y);
 
-                    while (fences.Contains((new Point(x + 1, fence.a.Y), new Point(x + 1, fence.b.Y), fence.dir)))
+                    while (fences.Contains((aPoint, bPoint, fence.dir)))
                     {
-                        used.Add((new Point(x + 1, fence.a.Y), new Point(x + 1, fence.b.Y), fence.dir));
+                        used.Add((aPoint, bPoint, fence.dir));
                         x++;
+                        aPoint = new Point(x + 1, fence.a.Y);
+                        bPoint = new Point(x + 1, fence.b.Y);
                     }
 
                     x = fence.a.X;
+                    aPoint = new Point(x - 1, fence.a.Y);
+                    bPoint = new Point(x - 1, fence.b.Y);
 
-                    while (fences.Contains((new Point(x - 1, fence.a.Y), new Point(x - 1, fence.b.Y), fence.dir)))
+                    while (fences.Contains((aPoint, bPoint, fence.dir)))
                     {
-                        used.Add((new Point(x - 1, fence.a.Y), new Point(x - 1, fence.b.Y), fence.dir));
+                        used.Add((aPoint, bPoint, fence.dir));
                         x--;
+                        aPoint = new Point(x - 1, fence.a.Y);
+                        bPoint = new Point(x - 1, fence.b.Y);
                     }
                 }
                 else
                 {
                     var y = fence.a.Y;
+                    var aPoint = new Point(fence.a.X, y + 1);
+                    var bPoint = new Point(fence.b.X, y + 1);
 
-                    while (fences.Contains((new Point(fence.a.X, y + 1), new Point(fence.b.X, y + 1), fence.dir)))
+                    while (fences.Contains((aPoint, bPoint, fence.dir)))
                     {
-                        used.Add((new Point(fence.a.X, y + 1), new Point(fence.b.X, y + 1), fence.dir));
+                        used.Add((aPoint, bPoint, fence.dir));
                         y++;
+                        aPoint = new Point(fence.a.X, y + 1);
+                        bPoint = new Point(fence.b.X, y + 1);
                     }
 
                     y = fence.a.Y;
+                    aPoint = new Point(fence.a.X, y - 1);
+                    bPoint = new Point(fence.b.X, y - 1);
 
-                    while (fences.Contains((new Point(fence.a.X, y - 1), new Point(fence.b.X, y - 1), fence.dir)))
+                    while (fences.Contains((aPoint, bPoint, fence.dir)))
                     {
-                        used.Add((new Point(fence.a.X, y - 1), new Point(fence.b.X, y - 1), fence.dir));
+                        used.Add((aPoint, bPoint, fence.dir));
                         y--;
+                        aPoint = new Point(fence.a.X, y - 1);
+                        bPoint = new Point(fence.b.X, y - 1);
                     }
                 }
-
-
             }
         }
 
         return sides;
     }
 
-    private List<(Point a, Point b, Direction dir)> GetFences(HashSet<Point> points)
+    private HashSet<(Point a, Point b, Direction dir)> GetFences(HashSet<Point> points)
     {
-        var fences = new List<(Point a, Point b, Direction dir)>();
+        var fences = new HashSet<(Point a, Point b, Direction dir)>();
 
         foreach (var p in points)
         {

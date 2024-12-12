@@ -33,7 +33,7 @@ public class Day12 : BaseDay
                 }
             }
 
-            result += area * perimeter;
+            result += area * GetFences(region.points).Count;
         }
 
         return result.ToString();

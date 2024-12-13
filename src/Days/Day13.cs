@@ -1,4 +1,5 @@
-﻿namespace AdventOfCode.Days;
+﻿
+namespace AdventOfCode.Days;
 
 [Day(2024, 13)]
 public class Day13 : BaseDay
@@ -17,19 +18,30 @@ public class Day13 : BaseDay
         return result.ToString();
     }
 
-    private long SolveMachine((int aX, int aY, int bX, int bY, int prizeX, int prizeY) machine)
+    private long SolveMachine((long aX, long aY, long bX, long bY, long prizeX, long prizeY) machine)
     {
-        var a = 0;
-        var b = 0;
+        var a = 0L;
+        var b = 0L;
 
-        var x = 0;
-        var y = 0;
+        var x = 0L;
+        var y = 0L;
 
-        while (x < machine.prizeX && y < machine.prizeY)
+        var mx = machine.prizeX / machine.bX;
+        var my = machine.prizeY / machine.bY;
+        mx++;
+        my++;
+
+        if (mx > my)
         {
-            x += machine.bX;
-            y += machine.bY;
-            b++;
+            x = my * machine.bX;
+            y = my * machine.bY;
+            b = my;
+        }
+        else
+        {
+            x = mx * machine.bX;
+            y = mx * machine.bY;
+            b = mx;
         }
 
         while ((x != machine.prizeX || y != machine.prizeY) && b > 0)
@@ -54,24 +66,63 @@ public class Day13 : BaseDay
         return 0;
     }
 
-    private (int aX, int aY, int bX, int bY, int prizeX, int prizeY) ParseMachine(string input)
+    private (long aX, long aY, long bX, long bY, long prizeX, long prizeY) ParseMachine(string input)
     {
         var a = input.Lines().First();
         var b = input.Lines().ToList()[1];
         var prize = input.Lines().Last();
 
-        var ax = int.Parse(a.Words().ToList()[2][2..]);
-        var ay = int.Parse(a.Words().ToList()[3][2..]);
-        var bx = int.Parse(b.Words().ToList()[2][2..]);
-        var by = int.Parse(b.Words().ToList()[3][2..]);
-        var prizeX = int.Parse(prize.Words().ToList()[1][2..]);
-        var prizeY = int.Parse(prize.Words().ToList()[2][2..]);
+        var ax = long.Parse(a.Words().ToList()[2][2..]);
+        var ay = long.Parse(a.Words().ToList()[3][2..]);
+        var bx = long.Parse(b.Words().ToList()[2][2..]);
+        var by = long.Parse(b.Words().ToList()[3][2..]);
+        var prizeX = long.Parse(prize.Words().ToList()[1][2..]); // + 10000000000000;
+        var prizeY = long.Parse(prize.Words().ToList()[2][2..]); // + 10000000000000;
 
         return (ax, ay, bx, by, prizeX, prizeY);
     }
 
     public override string PartTwo(string input)
     {
-        return string.Empty;
+        var machines = input.Paragraphs().Select(p => ParseMachine(p)).ToList();
+
+        var result = 0L;
+
+        foreach (var machine in machines)
+        {
+            result += SolveMachine2(machine);
+        }
+
+        return result.ToString();
+    }
+
+    private long SolveMachine2((long aX, long aY, long bX, long bY, long prizeX, long prizeY) machine)
+    {
+        var x = 0L;
+        var y = 0L;
+        var a = 0L;
+
+        var b = ((machine.prizeY * machine.aX) - (machine.aY * machine.prizeX)) / ((machine.aX * machine.bY) - (machine.aY * machine.bX));
+
+        while ((x != machine.prizeX || y != machine.prizeY) && b >= 0)
+        {
+            b--;
+            x -= machine.bX;
+            y -= machine.bY;
+
+            while (x < machine.prizeX && y < machine.prizeY)
+            {
+                a++;
+                x += machine.aX;
+                y += machine.aY;
+            }
+        }
+
+        if (x == machine.prizeX && y == machine.prizeY)
+        {
+            return b + (a * 3);
+        }
+
+        return 0;
     }
 }
